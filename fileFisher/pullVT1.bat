@@ -14,8 +14,8 @@ GOTO :SetRoot
 
 :: Sets the directory, but checks that it actually exists
 :SetRoot
-SET /P r=" > Enter Root of Search Tree: "
-DIR %r% >> output.log
+SET /P rootdir=" > Enter Root of Search Tree: "
+DIR %rootdir% >> output.log
 IF %ERRORLEVEL% EQU 0 GOTO :SetTarget
 IF %ERRORLEVEL% NEQ 0 GOTO :RootFnF
 
@@ -27,8 +27,8 @@ GOTO :SetRoot
 
 :: Sets the target filename, but checks that at least one exists
 :SetTarget
-SET /P f=" > Enter Target Filename: "
-DIR %r%\%f% /S /B >> output.log
+SET /P filename=" > Enter Target Filename: "
+DIR %rootdir%\%filename% /S /B >> output.log
 IF %ERRORLEVEL% EQU 0 GOTO :Search
 IF %ERRORLEVEL% NEQ 0 GOTO :TargetFnF
 
@@ -43,14 +43,25 @@ GOTO :SetTarget
 :Search
 SET n=0
 ECHO ===================================================================================
-ECHO = Searching subdirectories for %f%...
+ECHO = Searching subdirectories for %filename%...
 ECHO ===================================================================================
-MD %r%\_data\%f%
-FOR /F "delims=" %%x IN ('dir %r%\%f% /S /B') DO (CALL :Sub "%%x" "%%n")
+MD %rootdir%\_data\%filename%
+FOR /F "delims=" %%x IN ('dir %rootdir%\%filename% /S /B') DO (CALL :NewSub "%%x" "%%n")
 ECHO = Total of %n% file(s) renamed and copied to \_data				  
 ECHO ===================================================================================
 PAUSE
 GOTO :EOF
+
+:: Extract Information from path & filename
+:NewSub
+:: Set Local Variables
+SET fp=%~1%
+:: Extract Parent Directory Name
+FOR /D %%I IN ("%fp%\\..") DO (SET pd=%%~nxI) 
+:: Extract Individual Filename
+FOR /D %%I IN ("%fp%") DO (SET fn=%%~nxI)
+ECHO %fn%
+EXIT /B
 
 :Sub
 :: First trim the quote marks
