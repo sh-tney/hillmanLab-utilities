@@ -4,7 +4,7 @@ from datetime import datetime
 
 # init colorama, config path, and global variables
 init(autoreset=True)
-conf = "C:\\Users\\whijo924\\Projects\\soloBaseline-Josh-2019-12-04\\config.yaml"
+conf = input("Config Path: ")
 print(Fore.BLUE + "Multi-Shuffle Training; Note Variables are " + Fore.RED + "PER-SHUFFLE")
 shuffles = []
 disits = 0
