@@ -25,18 +25,28 @@ ECHO = There was an error locating this root, please ensure you have quotes arou
 ECHO   path if there are any spaces, and check it's the full path, e.g. "C:\Windows\".
 GOTO :SetRoot
 
+:: Sets the target filename, but checks that at least one exists
 :SetTarget
 SET /P f=" > Enter Target Filename: "
-GOTO :EOF
+DIR %r%\%f% /S /B >> output.log
+IF %ERRORLEVEL% EQU 0 GOTO :Search
+IF %ERRORLEVEL% NEQ 0 GOTO :TargetFnF
+
+:: If not even a single matching file can be found, the user is notified
+:TargetFnF
+ECHO = In a preliminary scan, no files matching this name were found under the root,
+ECHO   ensure that you have the right filename, including the type extension; And that
+ECHO   if it includes spaces, that it is in quote marks, e.g. "Cool Video.mpg".
+GOTO :SetTarget
 
 :: Recursively search folders for all matching files
 :Search
 SET n=0
 ECHO ===================================================================================
-ECHO = Searching subdirectories for "VT1.mpg", renaming each to the name of the folder 
+ECHO = Searching subdirectories for %f%...
 ECHO ===================================================================================
-MD %r%\_data
-FOR /F "delims=" %%x IN ('dir VT1.mpg /S /B') DO (CALL :Sub "%%x" "%%n")
+MD %r%\_data\%f%
+FOR /F "delims=" %%x IN ('dir %r%\%f% /S /B') DO (CALL :Sub "%%x" "%%n")
 ECHO = Total of %n% file(s) renamed and copied to \_data				  
 ECHO ===================================================================================
 PAUSE
