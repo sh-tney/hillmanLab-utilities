@@ -1,5 +1,5 @@
 @ECHO OFF
-MODE CON:COLS=83 LINES=30
+MODE CON:COLS=83
 ECHO ===================================================================================
 ECHO                                  --FILE FISHER--
 ECHO    This utility will take in a root directory of your choice, and a target file, 
@@ -17,7 +17,7 @@ GOTO :SetRoot
 :SetRoot
 ECHO ===================================================================================
 SET /P rootdir=" > Enter Root of Search Tree: "
-DIR %rootdir% > nul
+DIR %rootdir% >nul 2>&1
 IF %ERRORLEVEL% EQU 0 GOTO :SetTarget
 IF %ERRORLEVEL% NEQ 0 GOTO :RootFnF
 
@@ -31,7 +31,7 @@ GOTO :SetRoot
 :SetTarget
 ECHO ===================================================================================
 SET /P filename=" > Enter Target Filename: "
-DIR %rootdir%\%filename% /S /B > nul 2>&1
+DIR %rootdir%\%filename%  >nul 2>&1
 IF %ERRORLEVEL% EQU 0 GOTO :Search
 IF %ERRORLEVEL% NEQ 0 GOTO :TargetFnF
 
@@ -45,18 +45,20 @@ GOTO :SetTarget
 :: Create Dump Directory & Report
 :Search
 SET n=0
-SET dumpdir=%rootdir%\..\_data\%filename%
+FOR /D %%I IN (%rootdir%) DO (SET dumpdir=%%~dpI)
+SET dumpdir=%dumpdir%_fishedData\%filename%
 SET report="%dumpdir%\_report.txt"
 MD %dumpdir% >nul 2>&1
-ECHO New Session: %date% %time% >> %report%
+ECHO New Session: %date% %time% > %report%
 ECHO Search Root: %rootdir% >> %report%
 ECHO Search Target: %filename% >> %report%
 ECHO ===================================================================================
 ECHO = Searching subdirectories for %filename%...
 :: Recursively Search Subdirectories, and handle each Resulting Filepath
-FOR /F "delims=" %%x IN ('DIR %rootdir%\%filename% /S /B') DO (CALL :NewSub "%%x")
+FOR /F "delims=" %%X IN ('DIR %rootdir%\%filename% /S /B') DO (CALL :NewSub "%%X")
 ECHO ===================================================================================
-ECHO = Total of %n% file(s) renamed and copied to %dumpdir%				  
+ECHO = Total of %n% file(s) renamed and copied to:
+ECHO   %dumpdir%				  
 ECHO ===================================================================================
 PAUSE
 GOTO :EOF
@@ -70,9 +72,10 @@ SET /A n+=1
 FOR /D %%I IN ("%fp%\\..") DO (SET pd=%%~nxI) 
 :: Extract Individual Filename (This includes the extension)
 FOR /D %%I IN ("%fp%") DO (SET fn=%%~nxI)
-COPY "%fp%" "%dumpdir%\%pd%_%fn%" /Y
+COPY "%fp%" "%dumpdir%\%pd%_%fn%" /Y >nul 2>&1
 :: Check the copy was successful, and provide info
-ECHO.
-ECHO = Copied %fp%
-ECHO ^> Into %dumpdir%\%pd%_%fn%
+ECHO ^> %fp%
+ECHO. >> %report%
+ECHO = Copied %fp% >> %report%
+ECHO ^> Into %dumpdir%\%pd%_%fn% >> %report%
 EXIT /B
