@@ -1,4 +1,5 @@
 @ECHO OFF
+MODE CON:COLS=83 LINES=30
 ECHO ===================================================================================
 ECHO                                  --FILE FISHER--
 ECHO    This utility will take in a root directory of your choice, and a target file, 
@@ -9,13 +10,14 @@ ECHO    and renamed to the name of the containing folder (retaining the file typ
 ECHO    A report containing the original paths of each file is put in _report.txt.
 ECHO ===================================================================================
 :: Creates a log file for advanced error checking, with the actual command output
-ECHO New Session: %date% %time% >> output.log
+ECHO = New Session: %date% %time%
 GOTO :SetRoot
 
 :: Sets the directory, but checks that it actually exists
 :SetRoot
+ECHO ===================================================================================
 SET /P rootdir=" > Enter Root of Search Tree: "
-DIR %rootdir% >> output.log
+DIR %rootdir% > nul
 IF %ERRORLEVEL% EQU 0 GOTO :SetTarget
 IF %ERRORLEVEL% NEQ 0 GOTO :RootFnF
 
@@ -27,8 +29,9 @@ GOTO :SetRoot
 
 :: Sets the target filename, but checks that at least one exists
 :SetTarget
+ECHO ===================================================================================
 SET /P filename=" > Enter Target Filename: "
-DIR %rootdir%\%filename% /S /B >> output.log
+DIR %rootdir%\%filename% /S /B > nul 2>&1
 IF %ERRORLEVEL% EQU 0 GOTO :Search
 IF %ERRORLEVEL% NEQ 0 GOTO :TargetFnF
 
@@ -39,42 +42,37 @@ ECHO   ensure that you have the right filename, including the type extension; An
 ECHO   if it includes spaces, that it is in quote marks, e.g. "Cool Video.mpg".
 GOTO :SetTarget
 
-:: Recursively search folders for all matching files
+:: Create Dump Directory & Report
 :Search
 SET n=0
+SET dumpdir=%rootdir%\..\_data\%filename%
+SET report="%dumpdir%\_report.txt"
+MD %dumpdir% >nul 2>&1
+ECHO New Session: %date% %time% >> %report%
+ECHO Search Root: %rootdir% >> %report%
+ECHO Search Target: %filename% >> %report%
 ECHO ===================================================================================
 ECHO = Searching subdirectories for %filename%...
+:: Recursively Search Subdirectories, and handle each Resulting Filepath
+FOR /F "delims=" %%x IN ('DIR %rootdir%\%filename% /S /B') DO (CALL :NewSub "%%x")
 ECHO ===================================================================================
-MD %rootdir%\_data\%filename%
-FOR /F "delims=" %%x IN ('dir %rootdir%\%filename% /S /B') DO (CALL :NewSub "%%x" "%%n")
-ECHO = Total of %n% file(s) renamed and copied to \_data				  
+ECHO = Total of %n% file(s) renamed and copied to %dumpdir%				  
 ECHO ===================================================================================
 PAUSE
 GOTO :EOF
 
-:: Extract Information from path & filename
+:: Handle Resulting Filepaths
 :NewSub
-:: Set Local Variables
+:: Set Local Variables, incremement File Counter
 SET fp=%~1%
+SET /A n+=1
 :: Extract Parent Directory Name
 FOR /D %%I IN ("%fp%\\..") DO (SET pd=%%~nxI) 
-:: Extract Individual Filename
+:: Extract Individual Filename (This includes the extension)
 FOR /D %%I IN ("%fp%") DO (SET fn=%%~nxI)
-ECHO %fn%
-EXIT /B
-
-:Sub
-:: First trim the quote marks
-SET a=%~1%
-ECHO Found: ...%a:~-73%
-:: Substring down to the Date (Starting with \20xx)
-SET b=%a:*\20=%
-:: Cut off the actual filename
-SET c=%b:~,-8%
-:: Reappend full date, file extension, and target path
-SET d=%cd%\_data\20%c%.mpg
-ECHO Copying to: ...%d:~-68%
-::COPY "%a%" "%d%"
-SET /A %~2%+=1
-ECHO ===================================================================================
+COPY "%fp%" "%dumpdir%\%pd%_%fn%" /Y
+:: Check the copy was successful, and provide info
+ECHO.
+ECHO = Copied %fp%
+ECHO ^> Into %dumpdir%\%pd%_%fn%
 EXIT /B
