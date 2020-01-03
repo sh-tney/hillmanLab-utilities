@@ -54,7 +54,7 @@ For now, simply double-clicking the *fileFisher.bat* file will work fine. The *f
 
 ## Where are my files?
 
-The pulled files are all placed in a directory above the Search Root under *_fishedFiles*. For example if I search *C:\Users\Josh\*, my files will end up in *C:\Users\\_fishedFiles*
+The pulled files are all placed in a directory above the Search Root under *_fishedFiles*. For example if I search *C:\Users\Josh\\*, my files will end up in *C:\Users\\_fishedFiles*
 
 A *_report.txt* will also be here, detailing the origin of each file. Note that if you engage multiple sessions of fileFisher in the same Search Root, the new report will be appended to the end of the first report.
 
