@@ -63,7 +63,7 @@ ECHO = Total of %n% file(s) renamed and copied to:
 ECHO   %dumpdir%				  
 ECHO ===================================================================================
 PAUSE
-ECHO. >> %report%
+ECHO. >> %report% 
 GOTO :EOF
 
 :: Handle Resulting Filepaths
