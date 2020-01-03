@@ -3,7 +3,7 @@
 This utility makes organizing multi-layered subdirectory trees & getting specific files out of them a breeze, by taking in any "root" directory to search from; and a target filename. Searching through all the subdirectories and copying out matches, the files are all placed in a single folder and renamed to match the immedeate parent folder + actual filename.
 
 ## Usage and Examples
-For now, simply double-clicking the *fileFisher.bat* file will work fine.
+For now, simply double-clicking the *fileFisher.bat* file will work fine. The *fileFisher.bat* file can be safely copied/moved anywhere on it's own and should work fine; although having the link to this documentation available may be handy for future reference.
 
 ```> Enter Root of Search Tree: ```
 
@@ -57,3 +57,11 @@ For now, simply double-clicking the *fileFisher.bat* file will work fine.
 The pulled files are all placed in a directory above the Search Root under *_fishedFiles*. For example if I search *C:\Users\Josh\*, my files will end up in *C:\Users\\_fishedFiles*
 
 A *_report.txt* will also be here, detailing the origin of each file. Note that if you engage multiple sessions of fileFisher in the same Search Root, the new report will be appended to the end of the first report.
+
+## Potential Future Developments
+- More options regarding the way files are named on copy, with maybe with custom configurations.
+- Option to specify an output folder, rather than just *_/fishedFiles*.
+- Multiple searches per sessions (rather than simply ending after one).
+- Development into standalone callable-function, with proper arguments.
+- Options to suppress progress output.
+- Bugfixing & better error handling as needed.
