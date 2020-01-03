@@ -4,9 +4,9 @@ ECHO ===========================================================================
 ECHO                                  --FILE FISHER--
 ECHO    This utility will take in a root directory of your choice, and a target file, 
 ECHO    and will recursively run through all subdirectories from the root looking for
-ECHO    any file that shares the name (including file extension). Once identified, 
-ECHO    all matching files are copied to a new folder in the root, /_data/filename, 
+ECHO    any file that shares the name. Once identified, all matching files are copied 
 ECHO    and renamed to the name of the containing folder (retaining the file type).
+ECHO    These are placed in the folder above the target root, in /_fishedFiles.
 ECHO    A report containing the original paths of each file is put in _report.txt.
 ECHO ===================================================================================
 :: Creates a log file for advanced error checking, with the actual command output
@@ -31,7 +31,7 @@ GOTO :SetRoot
 :SetTarget
 ECHO ===================================================================================
 SET /P filename=" > Enter Target Filename: "
-DIR %rootdir%\%filename%  >nul 2>&1
+DIR %rootdir%\%filename% /S /B >nul 2>&1
 IF %ERRORLEVEL% EQU 0 GOTO :Search
 IF %ERRORLEVEL% NEQ 0 GOTO :TargetFnF
 
@@ -40,16 +40,18 @@ IF %ERRORLEVEL% NEQ 0 GOTO :TargetFnF
 ECHO = In a preliminary scan, no files matching this name were found under the root,
 ECHO   ensure that you have the right filename, including the type extension; And that
 ECHO   if it includes spaces, that it is in quote marks, e.g. "Cool Video.mpg".
+ECHO = You can also use wildcard characters to search for files with varying names, 
+ECHO   more on this is available in the documentation/README.
 GOTO :SetTarget
 
 :: Create Dump Directory & Report
 :Search
 SET n=0
 FOR /D %%I IN (%rootdir%) DO (SET dumpdir=%%~dpI)
-SET dumpdir=%dumpdir%_fishedData\%filename%
+SET dumpdir=%dumpdir%_fishedData\
 SET report="%dumpdir%\_report.txt"
 MD %dumpdir% >nul 2>&1
-ECHO New Session: %date% %time% > %report%
+ECHO New Session: %date% %time% >> %report%
 ECHO Search Root: %rootdir% >> %report%
 ECHO Search Target: %filename% >> %report%
 ECHO ===================================================================================
@@ -77,5 +79,5 @@ COPY "%fp%" "%dumpdir%\%pd%_%fn%" /Y >nul 2>&1
 ECHO ^> %fp%
 ECHO. >> %report%
 ECHO = Copied %fp% >> %report%
-ECHO ^> Into %dumpdir%\%pd%_%fn% >> %report%
+ECHO ^> Into %pd%_%fn% >> %report%
 EXIT /B
