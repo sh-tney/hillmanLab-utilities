@@ -41,7 +41,7 @@ ECHO = In a preliminary scan, no files matching this name were found under the r
 ECHO   ensure that you have the right filename, including the type extension; And that
 ECHO   if it includes spaces, that it is in quote marks, e.g. "Cool Video.mpg".
 ECHO = You can also use wildcard characters to search for files with varying names, 
-ECHO   more on this is available in the documentation/README.
+ECHO   more on this is available in the DOCUMENTATION/README.
 GOTO :SetTarget
 
 :: Create Dump Directory & Report
