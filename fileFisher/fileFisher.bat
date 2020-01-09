@@ -32,7 +32,7 @@ GOTO :SetRoot
 ECHO ===================================================================================
 SET /P filename=" > Enter Target Filename: "
 DIR %rootdir%\%filename% /S /B >nul 2>&1
-IF %ERRORLEVEL% EQU 0 GOTO :Search
+IF %ERRORLEVEL% EQU 0 GOTO :SetOutput
 IF %ERRORLEVEL% NEQ 0 GOTO :TargetFnF
 
 :: If not even a single matching file can be found, the user is notified
@@ -44,13 +44,42 @@ ECHO = You can also use wildcard characters to search for files with varying nam
 ECHO   more on this is available in the DOCUMENTATION/README.
 GOTO :SetTarget
 
-:: Create Dump Directory & Report
+:: Sets the output directory, or a default option, checking for errors
+:SetOutput
+ECHO ===================================================================================
+FOR /D %%I IN (%rootdir%) DO (SET outputdir=%%~dpI)
+SET outputdir=%outputdir%_fishedData\
+ECHO = Output to %outputdir%? 
+GOTO :YN
+
+:: Decision tree, returning the user to the prompt if they enter a non y/n answer
+:YN
+SET /P outputyn="> y/n (Choose 'n' to set your own output folder): "
+IF NOT "%outputyn%" == "y" (
+    IF "%outputyn%" == "n" (
+        SET /P outputdir=" > Enter Custom Output Directory: "
+    ) ELSE (
+        GOTO :YN
+    )
+)
+:: Attempt to create outputdir first, and check it exists after that
+MD %outputdir% >nul 2>&1
+IF %ERRORLEVEL% EQU 0 ECHO = Folder Not Found; Creating...
+DIR %outputdir% >nul 2>&1
+IF %ERRORLEVEL% EQU 0 GOTO :Search
+IF %ERRORLEVEL% NEQ 0 GOTO :OutputFnF
+
+:: If the directory doesn't already exist and couldn't be created, prompt again
+:OutputFnF
+ECHO = The output folder either didn't already exist, couldn't be created, or couldn't
+ECHO   be located for some reason. Please ensure you enter the correct full path; and
+ECHO   if it includes spaces, wrap the path in double quotes, e.g. "C:\New Folder".
+GOTO :SetOutput
+
+:: Search Subdirectories, Create Report
 :Search
 SET n=0
-FOR /D %%I IN (%rootdir%) DO (SET dumpdir=%%~dpI)
-SET dumpdir=%dumpdir%_fishedData\
-SET report="%dumpdir%\_report.txt"
-MD %dumpdir% >nul 2>&1
+SET report="%outputdir%\_report.txt"
 ECHO New Session: %date% %time% >> %report%
 ECHO Search Root: %rootdir% >> %report%
 ECHO Search Target: %filename% >> %report%
@@ -60,7 +89,7 @@ ECHO = Searching subdirectories for %filename%...
 FOR /F "delims=" %%X IN ('DIR %rootdir%\%filename% /S /B') DO (CALL :NewSub "%%X")
 ECHO ===================================================================================
 ECHO = Total of %n% file(s) renamed and copied to:
-ECHO   %dumpdir%				  
+ECHO   %outputdir%				  
 ECHO ===================================================================================
 PAUSE
 ECHO. >> %report% 
@@ -75,7 +104,7 @@ SET /A n+=1
 FOR /D %%I IN ("%fp%\\..") DO (SET pd=%%~nxI) 
 :: Extract Individual Filename (This includes the extension)
 FOR /D %%I IN ("%fp%") DO (SET fn=%%~nxI)
-COPY "%fp%" "%dumpdir%\%pd%_%fn%" /Y >nul 2>&1
+COPY "%fp%" "%outputdir%\%pd%_%fn%" /Y >nul 2>&1
 :: Check the copy was successful, and provide info
 ECHO ^> %fp%
 ECHO. >> %report%
