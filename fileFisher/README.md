@@ -52,6 +52,12 @@ For now, simply double-clicking the *fileFisher.bat* file will work fine. The *f
 - This will pull *"Margaret's Picture 1997-01-01.png"*, as well as *"Marie's Report 1999-01-01.xlsx"*
 - Particularly here, the .* at the end can be helpful if you are unsure of the file extension you are looking for.
 
+### ```> Select your preferred naming format: ```
+
+ - This section will always be accompanied by a list of options, which may be updated over time; each with a corresponding number.
+ - Simply choose a number from the list, e.g. "1" (which will always just keep the original filenames).
+ - The other options on this list will be for more specialised situations, for example if many layered subdirectories with different names all contain files that are named identically; copying all of these out directly would cause them to overwrite one another. Picking a different option here will include some kind of other marker to the filename to differentiate them, for example, the name of the parent folder.
+
 ### ```= Output to %Folder%\_fishedData\?```
 ### ```> y/n (Choose 'n' to set your own output folder): ```
 
@@ -68,7 +74,7 @@ A *_report.txt* will also be here, detailing the origin of each file. Note that 
 Your original files will be left in their original locations, unaffected, as this utility exlusively makes new copies; no deleting or cutting/pasting.
 
 ## Potential Future Developments
-- More options regarding the way files are named on copy, with maybe with custom configurations.
+- Further renaming convention options.
 - Multiple searches per sessions (rather than simply ending after one).
 - Development into standalone callable-function, with proper arguments.
 - Options to suppress progress output.
@@ -77,5 +83,6 @@ Your original files will be left in their original locations, unaffected, as thi
 ## Completed Developments
 - Basic Functionality: Mass Search, Copy & Renaming files from layered folder structures into a single folder.
 - Report generation, containing original paths & their corresponding new filenames.
-- Support for "?" and "*" wildcards.
-- Option to select a custom output folder, rather than just the default *..\\_fishedData\\*.
+- (1.1) Support for "?" and "*" wildcards.
+- (1.1) Option to select a custom output folder, rather than just the default *..\\_fishedData\\*.
+- (1.2) Options for different file renaming conventions: *\<filename\>.\<ext\>* (default), *\<parentdir\>.\<ext\>*, and *\<parentdir\>_\<filename\>.\<ext\>*
