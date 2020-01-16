@@ -1,13 +1,13 @@
 @ECHO OFF
 MODE CON:COLS=83
 ECHO ===================================================================================
-ECHO                                  --FILE FISHER--
-ECHO    This utility will take in a root directory of your choice, and a target file, 
-ECHO    and will recursively run through all subdirectories from the root looking for
-ECHO    any file that shares the name. Once identified, all matching files are copied 
-ECHO    and renamed to the name of the containing folder (retaining the file type).
-ECHO    These are placed in the folder above the target root, in /_fishedFiles.
-ECHO    A report containing the original paths of each file is put in _report.txt.
+ECHO                                --FILE FISHER 1.2--
+ECHO    This utility will take root directory of your choice, a target filename, and 
+ECHO    searches through all subdirectories of the root for all matching targets, 
+ECHO    copying them and placing them in a single default output folder, or a Custom
+ECHO    output location, renaming each file to your preferred naming format. Along
+ECHO    with these is a _report.txt file, containing a list of all original file
+ECHO    locations, and their corresponding new names for clarity.
 ECHO ===================================================================================
 :: Creates a log file for advanced error checking, with the actual command output
 ECHO = New Session: %date% %time%
@@ -32,7 +32,7 @@ GOTO :SetRoot
 ECHO ===================================================================================
 SET /P filename=" > Enter Target Filename: "
 DIR %rootdir%\%filename% /S /B >nul 2>&1
-IF %ERRORLEVEL% EQU 0 GOTO :SetOutput
+IF %ERRORLEVEL% EQU 0 GOTO :SetFormat
 IF %ERRORLEVEL% NEQ 0 GOTO :TargetFnF
 
 :: If not even a single matching file can be found, the user is notified
@@ -43,6 +43,32 @@ ECHO   if it includes spaces, that it is in quote marks, e.g. "Cool Video.mpg".
 ECHO = You can also use wildcard characters to search for files with varying names, 
 ECHO   more on this is available in the DOCUMENTATION/README.
 GOTO :SetTarget
+
+:: User selects their preferred naming conventions, looping if an invalied choice
+:SetFormat
+ECHO ===================================================================================
+ECHO = The targeted files will be renamed to a uniform format of your choice:
+ECHO   1. ^<filename^>.^<ext^>                  (This leaves your filenames unchanged)
+ECHO   2. ^<foldername^>.^<ext^>   (Renames them to the name of the containing folder)
+ECHO   3. ^<foldername^>_^<filename^>.^<ext^>     (Has both, with an underscore between)
+
+:: Basic Decision Tree that enforces a valid format choice, that also doens't break goto
+:F
+SET /P format="> Select your preferred naming format (1/2/3): "
+IF NOT %format% EQU 1 (
+    IF NOT %format% EQU 2 (
+        IF NOT %format% EQU 3 (
+            GOTO :F
+        ) ELSE (
+            SET format=3
+        )
+    ) ELSE (
+        SET format=2
+    )
+) ELSE (
+    SET format=1
+)
+GOTO :SetOutput
 
 :: Sets the output directory, or a default option, checking for errors
 :SetOutput
@@ -90,6 +116,7 @@ FOR /F "delims=" %%X IN ('DIR %rootdir%\%filename% /S /B') DO (CALL :NewSub "%%X
 ECHO ===================================================================================
 ECHO = Total of %n% file(s) renamed and copied to:
 ECHO   %outputdir%				  
+ECHO = Navigate to this folder to find a _report.txt with a full file list if needed.
 ECHO ===================================================================================
 PAUSE
 ECHO. >> %report% 
@@ -97,17 +124,37 @@ GOTO :EOF
 
 :: Handle Resulting Filepaths
 :NewSub
-:: Set Local Variables, incremement File Counter
+:: Get Fullpath Variable, Increment Filecounter
 SET fp=%~1%
 SET /A n+=1
-:: Extract Parent Directory Name
+:: Extract Parent Directory Name. %1 in formatting functions
 FOR /D %%I IN ("%fp%\\..") DO (SET pd=%%~nxI) 
-:: Extract Individual Filename (This includes the extension)
-FOR /D %%I IN ("%fp%") DO (SET fn=%%~nxI)
-COPY "%fp%" "%outputdir%\%pd%_%fn%" /Y >nul 2>&1
-:: Check the copy was successful, and provide info
-ECHO ^> %fp%
+:: Extract Individual Filename. %2 in formatting functions
+FOR /D %%I IN ("%fp%") DO (SET fn=%%~nI)
+:: Extract File Extension. %3 in formatting functions
+FOR /D %%I IN ("%fp%") DO (SET xt=%%~xI)
+:: Report Progress
+ECHO ^> Copying %fp%
 ECHO. >> %report%
 ECHO = Copied %fp% >> %report%
-ECHO ^> Into %pd%_%fn% >> %report%
+:: Jump to Relevant Filename Formatting Function to do actual copying & report
+CALL :Format%format% %pd% %fn% %xt%
+EXIT /B
+
+:: This format keeps the original filename; <filename>.<extension>
+:Format1
+COPY "%fp%" "%outputdir%\%2%3" /Y >nul 2>&1
+ECHO ^> Into %2%3 >> %report%
+EXIT /B
+
+:: This format renames files to <parentfolder>.<extension>
+:Format2
+COPY "%fp%" "%outputdir%\%1%3" /Y >nul 2>&1
+ECHO ^> Into %1%3 >> %report%
+EXIT /B
+
+:: This format renames files to <parentfolder>_<filename>.<extension>
+:Format3
+COPY "%fp%" "%outputdir%\%1_%2%3" /Y >nul 2>&1
+ECHO ^> Into %1_%2%3 >> %report%
 EXIT /B
