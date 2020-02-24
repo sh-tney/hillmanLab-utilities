@@ -1,3 +1,5 @@
+Pages link: https://sh-tney.github.io/hillmanLab-utilities/
+
 # utilities
 Some useful code snips I've made while working in the lab, working with some rat neural data
 
