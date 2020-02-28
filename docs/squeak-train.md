@@ -24,15 +24,21 @@ Start by going to the top-right and ***first*** changing the sensitivity of the 
 
 **img5**
 
-We're going with ```High Recall``` here (which is why I added the "_Recall_" suffix to the folder name), because we want the most generalisable sample we can get. This means we want to be as sure as possible that our sample includes even the most faint looking USVs. If you're curious, I also took to trying all three of the different settings on this slider, which are viewable in the folders ```S:\Kristin Hillman\LAB\Lab members\Josh\deepsqueak\Detections\31Jan-BaselineHybrid_Middle``` and ```...\31Jan-BaselineHybrid_Precision```: 
+We're going with ```High Recall``` here (which is why I added the "_Recall_" suffix to the folder name), because we want the most generalisable sample we can get. This means we want to be as sure as possible that our sample includes even the most faint looking USVs. 
+
+### Why use High Recall?
+
+ - If you're curious, I also took to trying all three of the different settings on this slider, which are viewable in the folders ```S:\Kristin Hillman\LAB\Lab members\Josh\deepsqueak\Detections\31Jan-BaselineHybrid_Middle``` and ```...\31Jan-BaselineHybrid_Precision```: 
 
 **img6**
 
-By opening up any of these folders using ```File > Select Detection Folder```, and loading the different Detected Call Files (on the middle-right of the DeepSqueak window), you can compare and see how sensitive each of these different settings were, despite all being used on the same network. For reference; here's a table that shows the number of calls detected by each sensitivity in each file:
+ - By opening up any of these folders using ```File > Select Detection Folder```, and loading the different Detected Call Files (on the middle-right of the DeepSqueak window), you can compare and see how sensitive each of these different settings were, despite all being used on the same network. For reference; here's a table that shows the number of calls detected by each sensitivity in each file:
 
 **img7**
 
-While it seems like the more precise network here would make more sense, I've tried to demonstrate here that an untuned "precise" network is actually just going to prune off real calls. The two bracketed numbers on the table represent two files I went through and manually counted how many "real" calls were in the file. While intuitively one might think that the Precise network with 1461 Calls would have found all 1264 of the Recall network's *"true"* calls, actually it cut off many of the true calls as well, leaving us with only 824. 
+ - While it seems like the more precise network here would make more sense, I've tried to demonstrate here that an untuned "precise" network is actually just going to prune off real calls. The two bracketed numbers on the table represent two files I went through and manually counted how many "real" calls were in the file. While intuitively one might think that the Precise network with 1461 Calls would have found all 1264 of the Recall network's *"true"* calls, actually it cut off many of the true calls as well, leaving us with only 824. 
+ 
+### Continuing...
 
 So because we want the most generalizeable sample, we want to go with the sensitivity that will give us the most "true" calls; ```Recall```. And from there, we're going with ```Multi Detect```. From the window that shows up there, you can select multiple source files from the Audio folder, using the ```Shift``` or ```Ctrl``` keys while clicking on multiple filenames; or just the **Select All** button:
 
@@ -55,3 +61,95 @@ On the following screen, we can select a few more options regarding our audio fi
 After that, you'll be processing for a while. Depending on the computer you're using, how many files you're analyzing, what settings you selected; this could take minutes or hours. On a computer with a Nvidia 1050Ti 4GB, doing the single file I'm using in this example took about 10 minutes. As files complete, you'll see the number of calls detected show up in the Matlab Command Window, like ```2921 Calls found in: filename ```. You'll also notice after all the files are finished processing, your selected Detection folder will now have files in it; and the Detected Call Files list will have things in it now.
 
 ## Trimming our Sample Set
+
+So we have a whole bunch of audio files analyzed with a *Hybrid* of two *Baseline* Networks on the *Recall* setting, all sitting in the ```Date-BaselineHybrid_Recall``` folder. While in the training process, I'd reccomend making a backup copy of these in case we need to refer back to it later. I duplicated mine into a folder you can see called ```Date-BaselineHybrid_Recall_Trimmed```, which I'm then going to load up with ```File > Select Detection Folder```:
+
+**img11**
+
+And we're going to start by just picking a Detected Call File on the right, and hitting ```Load Calls```, which should look something like this:
+
+**img12**
+
+Some interesting things to look at here, in the top left and center mainly:
+- **Call**: The number of the call you're looking at obviously, you can scroll through them with your arrow keys, or the ```Previous Call``` and ```Next Call``` buttons on the middle right.
+- **Score**: This number represents how certain the network is that there is actually a call in the green box on the image; This number is a probability ranging from zero to one. The **Score Threshold** we looked at in the Multi-Detect options earlier refers to this number, such that any call that falls below the threshold you set, will be ignored instead.
+- **Accepted**: This means that the network has "accepted" that there is a call in the box. All of the calls will have this flag at this stage.
+- **Label: USV**: The label isn't really important here yet, as all of them will have been labelled as USVs.
+- **Others**: Everything else is fairly intuitive data on the individual call.
+
+Also distinctly noticeable in this image, is that the "call" that has been detected isn't actually a USV at all, it's some Noise, and we're going to hit the ```Reject Call``` button (or the ```R``` key). You'll notice that the flag turns to "Rejected", and the box turns red:
+
+**img13 red reject 1**
+
+Now we'll hit ```Next Call >``` (or the ```Right Arrow``` Key). And in my case at least, the next call is also a **False Positive**, which I'm going to reject as well. We're rejecting these, so that when we use this file as a training sample, the network knows to use them as a "bad" example, and knows to ignore it. I'll be continuing doing this for the entire file until I hit some *real* calls; like this:
+
+**img14**
+
+A real call! But it's not quite right; the box is clipping out some of it around the edges. Because whatever is inside the box is used as the reference "sample", we want to make sure that the box is nice and tightly encapsulating the whole call; to make sure our network is trained as well as possible. If we train our network on garbage, it's only going to identify garbage. So by pressing ```Redraw``` (or the ```D``` Key), and dragging a better box on the image, we can "trim" it up, like so:
+
+**img15 trim**
+
+Continuing on through the file, there'll be many more calls that need trimming (either up *or* down), and we're going to do this for the whole file. And loading up more files and doing the same for them. I did this for 6 files, which honestly took a couple of days. 6 files in my case was enough to have a nice large sample that included each of my rats on 2 different days of testing each, as we're hoping to get a nice sample that includes many different types of calls; again to make things as generalizable as possible. Literally every single one can be seen in the ```Date-BaselineHybrid_Recall_Trimmed``` folder, which can be directly compared with ```Date-BaselineHybrid_Recall``` for a "before-after" kind of thing.
+
+## Training a New Network
+
+After you've got a few files trimmed, with all the bad calls rejected, and all the real calls trimmed up, we can actually train a new network! We head up to ```Tools > Network Training > Create Network Training Images```. We'll be prompted to select sample files to use, so we're going to select all of the files we just trimmed from the ```_Trimmed``` folder: 
+
+**img16**
+
+**img17**
+
+Right after that is the spectrogram settings, which I stick with the default settings of entirely with the exception of **Boat Length** which we have to change to ```0```, because we're doing multiple files. This'll take a little bit to do, but at the end you'll have created a set of image training table files. So next we'll go with ```Tools > Network Training > Train Detection Network```. This should put us straight in DeepSqueak's "Training" folder, in which we'll select all of the brand new mat files that have just been placed there: 
+
+**img18**
+
+When asked if we want to base off an existing model, we'll select "No", and training will start. This will take quite a while, and will mostly take place in the Matlab Command Window; giving us updates on the four phases it goes through:
+
+**img19**
+
+After all of this, once it's finished training, we'll be prompted to give our network an actual name and save it in the *Networks* folder; which I saved as ***HillmanLab_Gen1***. In theory now, this is the finished product of a network specifically trained against our own dataset. Indeed, this is exactly the network we'll be using, so let's throw it some files.
+
+Just like before, we're going to:
+ - Create a new Detection folder to output to: *HillmanLab_Gen1_Recall*.
+ - Open it up in ```File > Select Detection Folder```
+ - Set the Slider to *High Recall* - more on this again in a second
+ - ```Multi Detect```, again picking all of the Audio files that we picked in the sample;
+ - Same Settings, let it process.
+ - You now have a set of fully Call Detected files.
+ 
+### Why High Recall Again?
+
+ - The Detection Network we just created is specialized at picking out **calls-amongst-noise**, but inevitably this comes with the large number of **False Positives** or **Noise**, which messes with our data. So we're going to create a Denoiser Network, which is specialized at picking out **noise-amongst-calls** and marking them as such, so that we can remove them. Think of this as using a large grain seive for the Detection Network - good at really getting out all the big long strips of nothing that our files are going to be full of, but let smaller patches of nothing slip through. Now a much finer grain seive for the Denoiser can be much more sensitive, specialized at very efficiently getting out the last little imperfections from a dataset that has *already* had the big chunks removed.
+ - We pick High Recall because we'd rather be super generous and make sure we catch every *true positive*, and then filter out the **Noise** afterward with a precise denoiser. This is preferable to starting with Precsison and trimming out a bunch of good USVs that a Denoiser can't bring back. For demonstrating that this kind of "overpruning" is still a problem, I went through and did a similar check to the BaselineHybrid check, just seeing how many "true calls" are actually contained in each level of precision (featuring *BaselineHybrid_Recall* to show how much better our network is):
+ 
+**img20**
+
+ - It's worth noting here that the *Precision* network is actually very close to hitting almost entirely "true" calls, suggesting it has very few **False Positives**. But when we compare it to the number of true calls in the *Recall* network, we see that it's missing around 150, which is over 10% of the calls (at least!), so it has many **False Negatives**. But of course, *Recall* comes with nearly double the number of total detections, suggesting it has a massive number of **False Positives**. Like with a haircut, it's easier to take more off than it is to put it back on
+ 
+## Training a Denoiser
+
+We're going to make a new copy of our nice new analyzed data from our Detection network, and put it in a new folder. So I now have a copy of ```HillmanLab_Gen1_Recall``` called ```HillmanLab_Gen1_Parsed```. When I open this up, I'm going to load up a Detected Call File just like before, and see a familiar looking scene:
+
+**img21 - denoiser noise**
+
+While most of the correct calls in this file are pretty decent at getting boxes right, there's lots of just white noise like this which is being detected as a call. So we're going to ```Reject Call``` it again. But because the Denoising trainer actually relies on the Noise label, we need to set up our own labels - ***asdjajksdasdnkausdausdu***
+
+**img22 class label setup**
+
+***setup class label***
+
+So now that we have that sorted, we should be able to just press the ```1``` Key, and we'll see that this has been updated to be both *Rejected*, and now has the label *Noise*. And we're going to go through this whole file like this just **Parsing**, which is to say we're only either having things *Rejected & Noise Flagged* **or** *Accepted & USV Flagged*, but we are ***NOT*** trimming any of the accepted USVs.
+
+### Why Parsing, Why Not Trimming?
+
+ - Another fair question would also be "why not just mark all those other calls we spent days doing as Noise at the same time?", and the answer is that our first dataset is for training a network to be as good at identifying random USVs spread across the file as a human. So for it to have trimmings & boxes that are similar to human accuracy, we need to train it on a dataset of human-marked USVs spread across a file. Monkey-See-Monkey-Do. 
+  - This network isn't trying to do that though, this network isn't trying to be good at finding noise inside a human-marked file. This network is trying to be good at taking the **Noise/False Positives** out of a *computer-marked* file; so we need to feed it training sets that are representative of that: the ones generated by the same network it's going to be preceded by in "real" analysis. Our going through parsing the yes/no state of the file being generated by the computer is us training our network to be good at saying ye/no to the same type of thing.
+  
+I think it's also important in this process of Accepting/Rejecting being very binary, that we have clear guideliness on what we count as an Accept; as it's not as simple as being able to readjust a non-perfect yes; We only have Yes and No. This is naturally somewhat subjective to what kind of testing you want to do.
+
+In the case of the testing I'm working on, we're mainly concerned with just tagging the timestap of each call. Not so much about the type of call or frequency, those are somewhat secondary to the timing. And so my guidelines for accepting/rejecting are:
+ - Accept even a partial corner of a call - we'd rather a partial hit than a full miss, as long as each little USV flag is set close enough to an actual call, that's the most important thing.
+ - Reject calls that are "close-to" but not on a real call. We don't want to confuse the network or give it mixed signals based on things that aren't actually in the Box.
+ - Reject white noise with no features.
+ - Reject "Drop Spikes" and "Fan Noise" - for my recording environment specifically has a lot of background noise, which is luckily quite distinct from actual USVs, so we reject that easily.
+ - Generally being rather generous with Accepting as long as there's something in the box that isn't just blatant white noise.
