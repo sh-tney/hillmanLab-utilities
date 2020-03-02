@@ -112,4 +112,4 @@ By going over to the right and clicking on the "Calls" table in the Workspace Va
 As this is already formatted as a Matlab table, these variables are already in great condition to use out-of the box, although it's maybe wise to prune out the irrelevant columns like RelBox and maybe even the Audio. Other than that, these should all be ready to integrate straight into your existing analysis scripts!
 
 ## If you made it this far
-Thanks for actually reading all of that, I hope it's enough to get people going with the basics of running Audio files through deepsqueak. There'll be another guide here somewhere on how to train your own, and if there are any errors or clarifications needed, I'm almost always available by email at joshwhitney789@gmail.com.
+Thanks for actually reading all of that, I hope it's enough to get people going with the basics of running Audio files through deepsqueak. There'll be another guide ***here*** on how to train your own, and if there are any errors or clarifications needed, I'm almost always available by email at joshwhitney789@gmail.com.
