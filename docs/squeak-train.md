@@ -10,11 +10,13 @@ First; we'll be looking inside the main deepsqueak folder, and opening up *DeepS
 
 **img1**
 
-We'll first need to make sure we've got all the folder set up, so we'll be going to to the menu to se----
+Don't worry too much if the image in the middle or anything else doesn't match; as long as the window shows up. Now we have to set up our folders. Go to menu at the top left; and select ```File > Select Network Folder```. We're going to be navigating to  *deepsqueak/Networks* folder along with the default networks. Select the folder, and we'll see our Neural Networks list in the top-right updated with the contents of the folder: 
 
 **selected network folder 2 & 3**
 
-Next is selecting ```File > Select Audio Folder```; in which we'll be picking whatever folder our raw audio files are in, so mine in this case are in *sourceData/pilotWAV*. When we select the folder, it'll update our Audio Files list similarly. Then we're going to do the same for ```File > Select Detection Folder```; Except this time we're making a new folder somewhere to put our first training outputs, which I'm going to name *Date-BaselineHybrid_Recall*, which I'll explain shortly.
+Next is selecting ```File > Select Audio Folder```; in which we'll be picking whatever folder our raw audio files are in, so mine in this case are in *sourceData/pilotWAV*. When we select the folder, it'll update our Audio Files list similarly. Then we're going to do the same for ```File > Select Detection Folder```; Except this time we're making a new folder somewhere to put our first training outputs, which I'm going to name *Date-BaselineHybrid_Recall*, which I'll explain shortly:
+
+**img4**
 
 ## Creating a Baseline Sample
 
@@ -24,7 +26,7 @@ Start by going to the top-right and ***first*** changing the sensitivity of the 
 
 **img5**
 
-We're going with ```High Recall``` here (which is why I added the "_Recall_" suffix to the folder name), because we want the most generalisable sample we can get. This means we want to be as sure as possible that our sample includes even the most faint looking USVs. 
+We're going with ```High Recall``` here (which is why I added the "_Recall" suffix to the folder name), because we want the most generalisable sample we can get. This means we want to be as sure as possible that our sample includes even the most faint looking USVs. 
 
 ### Why use High Recall?
 
@@ -128,22 +130,26 @@ Just like before, we're going to:
  
 ## Training a Denoiser
 
-We're going to make a new copy of our nice new analyzed data from our Detection network, and put it in a new folder. So I now have a copy of ```HillmanLab_Gen1_Recall``` called ```HillmanLab_Gen1_Parsed```. When I open this up, I'm going to load up a Detected Call File just like before, and see a familiar looking scene:
+We're going to make a new copy of our nice new analyzed data from our Detection network, and put it in a new folder. So I now have a copy of ```HillmanLab_Gen1_Recall``` called ```HillmanLab_Gen1_Recall_Parsed```. When I open this up, I'm going to load up a Detected Call File just like before, and see a familiar looking scene:
 
 **img21 - denoiser noise**
 
-While most of the correct calls in this file are pretty decent at getting boxes right, there's lots of just white noise like this which is being detected as a call. So we're going to ```Reject Call``` it again. But because the Denoising trainer actually relies on the Noise label, we need to set up our own labels - ***asdjajksdasdnkausdausdu***
+While most of the "true" calls in this file are pretty decent at getting boxes right, there's lots of just white noise like this which is being detected as a call. So we're going to ```Reject Call``` it again. But because the Denoising trainer actually relies on the Noise label, we need to set up our own labels - In ```Tools > Call Classification > Add Custom Labels```.
 
 **img22 class label setup**
 
-***setup class label***
+In here, we can set any labels we want to any of the number keys, such that when looking at a Detection, you press the corresponding number key; and it'll take on the label appointed to that slot. While this is also used for Call Classification training, we're only interested in Noise training, so we only need two labels: ```Noise```, and ```USV```, as shown above. Then we just hit ```OK```.
 
 So now that we have that sorted, we should be able to just press the ```1``` Key, and we'll see that this has been updated to be both *Rejected*, and now has the label *Noise*. And we're going to go through this whole file like this just **Parsing**, which is to say we're only either having things *Rejected & Noise Flagged* **or** *Accepted & USV Flagged*, but we are ***NOT*** trimming any of the accepted USVs.
+
+**img23**
 
 ### Why Parsing, Why Not Trimming?
 
  - Another fair question would also be "why not just mark all those other calls we spent days doing as Noise at the same time?", and the answer is that our first dataset is for training a network to be as good at identifying random USVs spread across the file as a human. So for it to have trimmings & boxes that are similar to human accuracy, we need to train it on a dataset of human-marked USVs spread across a file. Monkey-See-Monkey-Do. 
   - This network isn't trying to do that though, this network isn't trying to be good at finding noise inside a human-marked file. This network is trying to be good at taking the **Noise/False Positives** out of a *computer-marked* file; so we need to feed it training sets that are representative of that: the ones generated by the same network it's going to be preceded by in "real" analysis. Our going through parsing the yes/no state of the file being generated by the computer is us training our network to be good at saying ye/no to the same type of thing.
+  
+### Continuing...
   
 I think it's also important in this process of Accepting/Rejecting being very binary, that we have clear guideliness on what we count as an Accept; as it's not as simple as being able to readjust a non-perfect yes; We only have Yes and No. This is naturally somewhat subjective to what kind of testing you want to do.
 
@@ -153,3 +159,32 @@ In the case of the testing I'm working on, we're mainly concerned with just tagg
  - Reject white noise with no features.
  - Reject "Drop Spikes" and "Fan Noise" - for my recording environment specifically has a lot of background noise, which is luckily quite distinct from actual USVs, so we reject that easily.
  - Generally being rather generous with Accepting as long as there's something in the box that isn't just blatant white noise.
+ 
+ So I went and did this Parsing process on the same 6 files that I did in the original Detection Network Training; Again this is quite a long process of just going through thousands of Detections, and either press ```1``` and ```R``` or clicking next. But at the end of all that, we can get the actual training going.
+ 
+ When we train/use a Denoiser using DeepSqueak, the network used will **ALWAYS** be the file named *"CleaningNet.mat* inside the ```deepsqueak/Denoising Networks/``` folder. There'll be a default one included there right now, so we'll create a backup of that and place it inside there (I named my backup folder "DefaultCleaner"). Then we'll also create a new folder that we'll be making a backup of the new network in, like so:
+ 
+**img24**
+
+Now back in the DeepSqueak window, we'll go to ```Tools > Network Training > Train Post Hoc Denoiser```. Here we'll select all the files we marked in the ```Date-HillmanLab_Gen1_Recall_Parsed```:
+
+**img25**
+
+Training should start right away after confirming, and after all the files have loaded in, you'll see a progress window showing the training proccess, along with a matrix of the Error rate at the end:
+
+**img26 matlab display of training denoiser**
+
+Now we have a trained up Denoiser, so let's test it out. As usual though, backups first. Make another copy of the ```Date-HillmanLab_Gen1_Recall``` called ```Date-HillmanLab_Gen1_Recall_CustomDenoiser```, and change our Selected Detection Folder to that. We also need to make a copy of *"CleaningNet.mat"* from ```deepsqueak/Denoising Networks``` inside the "HillmanDenoiser" folder we created earlier; as *CleaningNet.mat* will now be overwritten from the original default network to our new Custom one.
+
+Now back in the DeepSqueak window, we go ahead to ```Tools > Automatic Review > Post Hoc Denoising```, and select whatever files we want to Denoise, again using ```Ctrl``` or ```Shift``` to select multiples, after which training will start straight away:
+
+**img27**
+
+This should take a little while, especially if you've picked many files. After the training though, you should be able to load up a Detected Call File from the folder, and see that now it's automatically Rejected & Noise-Marked as if we had done it. Obviously there'll always be some amount of variability with getting a few **False Positives/Negatives**, however hopefully our Denoiser will have this at the lowest amount of variance possible. For reference, I went and used both my Custom Denoiser & the Default Denoiser (included with DeepSqueak), and compared them to the ```Date-HillmanLab_Gen1_Recall_Parsed``` below:
+
+**img28**
+
+What I'm trying to demonstrate here again, is that the BaselineDenoiser (included with DeepSqueak) looks to be over-pruning out compared to the manual parse (shown in Brackets on the HillmanLab_Gen1_Recall column). Even if every single call that BaselineDenoiser got was correct (which it won't be), it's still cutting off at around 10% of the legitimate calls. Our CustomDenoiser on the other hand, has results that look extremely close even just numerically to the "true" number of legimate calls that I found. And while I didn't record the exact number of "true" calls inside the CustomDenoised files; On visual inspection (which you can see yourself in ```deepsqueak/Detections/Date-HillmanLab_Gen1_Recall_CustomDenoiser```, I'd call the difference a "matter of opinion" moreso than a flaw of the network. And considering the amount of time saved on manually marking each call for weeks, what looks at a glance to be sub-1% variance, we'll gladly take it.
+
+## If you made it this far
+Thanks for actually reading all of that, I hope it's enough to get people going with the basics of training up their own Detection & Denoising Networks on Deepsqueak. There'll be another shorter guide ***here*** on just how to actually use your Network for mass data analysis now, and if there are any errors or clarifications needed, I'm almost always available by email at joshwhitney789@gmail.com.
