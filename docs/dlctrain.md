@@ -37,6 +37,8 @@ First of all, let's open up the Anaconda Prompt as an Administrator. If not sure
  
  **img4**
  
+ ## Analyzing our Videos
+ 
 Now here, before we start opening anything up, we have to check that our config file is set up correctly. If you've moved or copied your deeplabcut folder (with the network stored in it) anywhere (in this instance, anywhere other than ```S:\Kristin Hillman\LAB\Lab members\Josh\deeplabcut\simplePair2-Josh-2019-12-18```), you'll have to update this manually. So let's open up an Explorer window (```Windows Key``` + ```E```), and navigate to our deeplabcut folder. Inside, we want to open up *config.yaml* inside Notepad:
 
 **img5**
@@ -80,7 +82,11 @@ After we've set all our options, like I have above, we can hit ```RUN```. This w
 
 **img12**
 
-And that's it. Video Analysis done! It's probably worth taking tour through what we actually made though. Open up an explorer window (```Windows Key``` + ```E```), and navigate to whatever our destination folder was set to (*in my case, the sourceData/pilotMPG folder*):
+And that's it. Video Analysis done! It's probably worth taking tour through what we actually made though.
+
+## Interpreting our Data
+
+Open up an explorer window (```Windows Key``` + ```E```), and navigate to whatever our destination folder was set to (*in my case, the sourceData/pilotMPG folder*):
 
 **img13**
 
