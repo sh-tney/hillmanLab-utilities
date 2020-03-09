@@ -1,4 +1,11 @@
-# Using your DeepSqueak Network
+---
+title: Analyzing Audio with DeepSqueak
+layout: template
+filename: squeakbasic.md
+---
+
+# Analyzing Audio with DeepSqueak
+
 **links to deepsqueak page**
 
 This is a short guide intended to walk someone through the process of using a DeepSqueak network (which has already been prepared) to analyze new sound clips. To see how to train your own custom network, see ***link***.

@@ -1,4 +1,10 @@
-# Using your DeepLabCut Network
+---
+title: Analyzing Videos with DeepLabCut
+layout: template
+filename: dlcbasic.md
+---
+
+# Analyzing Videos with DeepLabCut
 
 ### Download DeepLabCut (DLC), and read their documentation here: https://github.com/AlexEMG/DeepLabCut
 

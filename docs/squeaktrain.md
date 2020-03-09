@@ -1,4 +1,10 @@
-# Training your own DeepSqueak Network
+---
+title: Training your own DeepSqueak network
+layout: template
+filename: squeaktrain.md
+---
+
+# Training your own DeepSqueak network
 **links to dsqueak stuff**
 
 This is a short guide intended to walk someone through the process of training a tailored DeepSqueak network, specialized at identifying USVs in whatever unique soundscape you're trying to analyze. This guide also has the dual purpose of documenting how I trained my own network for use in the Hillman Lab at the University of Otago.
