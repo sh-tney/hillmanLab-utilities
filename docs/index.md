@@ -6,6 +6,4 @@ filename: index.md
 
 # Hello
 
-{% for page in site.pages %}
-    [{{ page.title }}]({{ page.filename }})
-{% endfor %}
+[link](dlcbasic.md)
