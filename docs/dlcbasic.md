@@ -1,8 +1,8 @@
 # Using your DeepLabCut Network
 
-**links to dlc page**
+### Download DeepLabCut (DLC), and read their documentation here: https://github.com/AlexEMG/DeepLabCut
 
-This is a short guide intended to walk someone through the process of using a DeepLabCut network (which has already been prepared) to analyze new video files. To see how to train your own custom network, see ***link***. For the purposes of this guide, I'll be referring to the network stored in ```S:\Kristin Hillman\LAB\Lab members\Josh\deeplabcut```, and the sample videos stored in ```S:\Kristin Hillman\LAB\Lab members\Josh\sourceData\pilotMPG```.
+This is a short guide intended to walk someone through the process of using a DeepLabCut network (which has already been prepared) to analyze new video files. To see how to train your own custom network, see [here](./dlctrain.md). For the purposes of this guide, I'll be referring to the network stored in ```S:\Kristin Hillman\LAB\Lab members\Josh\deeplabcut```, and the sample videos stored in ```S:\Kristin Hillman\LAB\Lab members\Josh\sourceData\pilotMPG```.
 
 ## Getting Started
 
@@ -19,11 +19,11 @@ First we actually need to have an environment that supports DeepLabCut installed
 
 First of all, let's open up the Anaconda Prompt as an Administrator. If not sure where to do this, we can search for it in the Start Menu and **right-click** on it, selecting ```Run as Administrator```:
 
-**img1**
+![img1](./img/dlcbasic/img1.png)
 
  - Alternatively to this, click ```Open File Location``` from the right-click menu; In the new explorer window, **right-click** the Anaconda Prompt (***not*** Powershell Verision), and select ```Properties```. Inside the Properties window, open ```Advanced```, and tick the *Run as Administrator* option, and click *OK* to save. This means that in the future, Anaconda Prompt will open as Administrator by default.
  
- **img2**
+![img2](./img/dlcbasic/img2.png)
  
  Now inside the Anaconda Prompt window we want to enter the following codes, hitting ```Enter``` after each line:
  - ```activate *dlc-windowsGPU*``` - This just puts us in the DeepLabCut environment we already set up
@@ -31,33 +31,33 @@ First of all, let's open up the Anaconda Prompt as an Administrator. If not sure
  - ```import deeplabcut``` - Pulls deeplabcut from the online repository
  - ```deeplabcut.launch_dlc()``` - Opens up the DLC user interface
  
- **img3**
+![img3](./img/dlcbasic/img3.png)
  
  We should now be greeted with the following screen:
  
- **img4**
+![img4](./img/dlcbasic/img4.png)
  
  ## Analyzing our Videos
  
 Now here, before we start opening anything up, we have to check that our config file is set up correctly. If you've moved or copied your deeplabcut folder (with the network stored in it) anywhere (in this instance, anywhere other than ```S:\Kristin Hillman\LAB\Lab members\Josh\deeplabcut\simplePair2-Josh-2019-12-18```), you'll have to update this manually. So let's open up an Explorer window (```Windows Key``` + ```E```), and navigate to our deeplabcut folder. Inside, we want to open up *config.yaml* inside Notepad:
 
-**img5**
+![img5](./img/dlcbasic/img5.png)
 
 As we can see here, my **project_path** variable isn't correct! You'll also notice my **video_sets** variables are also wrong, however this only matters during a training process, not relevant to us here, so we can leave them alone for now. Updating the **project_path**:
 
-**img6**
+![img6](./img/dlcbasic/img6.png)
 
 With this corrected, we can return to the DeepLabCut window, and go to the *Manage Project* tab. Here, we want to select the ```Load existing project``` option. We then want to ```Browse``` to select our config file. Here, we navigate to that *config.yaml* file (the one we just edited):
 
-**img7**
+![img7](./img/dlcbasic/img7.png)
 
 After we confirm the file and hit ```OK```, we should see a few more tabs appear! Most of these are related to training, so we're going to skip right ahead to *Analyze Videos*:
 
-**img8**
+![img8](./img/dlcbasic/img8.png)
 
 First off, we'll hit ```Select videos to analyze```, which will open the video selection dialog. Navigate to wherever all your videos are stored; For this example I used ```S:\Kristin Hillman\LAB\Lab members\Josh\sourceData\pilotMPG```. You can drag a box to select multiple videos at once, or click on multiple while holding ```Ctrl``` or ```Shift```. In this case, I selected just one video:
 
-**img9**
+![img9](./img/dlcbasic/img9.png)
 
 - Note that if you accidentally select videos wrong, and try to change your selection, it'll just keep adding to the list. To fully reset the collection, just go back to the *Manage Project* tab and reopen the project file.
 
@@ -74,13 +74,13 @@ Now we have to select all the options for our analysis, which I've detailed in o
 - **Include the skeleton:**: This option will only appear if you ticked "yes" on making a video. If you set up a skeleton in the training process, you'll be able to turn this on; I didn't however, so I'll leave it off.
 - **Specify number of trail points**: Like the previous option, this only shows up if we're making a video. This tells the video processor how many frames worth of "ghost" markers to have at a time. Setting this to just ```1``` will make a normal marked video, but setting it higher will leave a trail behind each marker of the previous positions, creating a visual trajectory plot.
 
-**img10** - redo
+![img10](./img/dlcbasic/img10.png)
 
 After we've set all our options, like I have above, we can hit ```RUN```. This will take quite a while (like, hours for multiple videos), and we'll see progress in the Anaconda Prompt window. There are some scary looking errors here with dead frames in the video, but this shouldn't be much to worry about:
 
-**img11**
+![img11](./img/dlcbasic/img11.png)
 
-**img12**
+![img12](./img/dlcbasic/img12.png)
 
 And that's it. Video Analysis done! It's probably worth taking tour through what we actually made though.
 
@@ -88,15 +88,15 @@ And that's it. Video Analysis done! It's probably worth taking tour through what
 
 Open up an explorer window (```Windows Key``` + ```E```), and navigate to whatever our destination folder was set to (*in my case, the sourceData/pilotMPG folder*):
 
-**img13**
+![img13](./img/dlcbasic/img13.png)
 
 In here, we can see the original source videos (.mpg), and right next to the one video I actually analyzed, are all the output files. These are all clearly named the same as the original video, but followed by the name & details of the network used to analyze it. First we might as well open up the video, **.mp4** (you can also view a video I made here: https://youtu.be/1OT02HF8IUE) 
 
-**img14** 
+![img14](./img/dlcbasic/img14.png)
 
 We can also open up the **.csv** file, which is a little less intuitive:
 
-**img15**
+![img15](./img/dlcbasic/img15.png)
 
 This is likely the most important of the files to understand; so I'll try and detail what it all means:
 - First, the **top** row in this case is mostly useless to us, as we scored all our body parts with the same network
@@ -107,25 +107,25 @@ This is likely the most important of the files to understand; so I'll try and de
 
 The remaining files we can see here (**.h5** and **.pickle**) aren't that useful to us, only containing some small metadata; and can be safely deleted. Let's also take a look in the*plot-poses* folder though, and the per-video subfolder in there:
 
-**img16**
+![img16](./img/dlcbasic/img16.png)
 
 These are all purely visual graphs, which are generated by the **Plot trajectories** option, which aren't super useful for mass-video analysis, and individually are rather difficult to interperet, but I've included them here for completeness:
 
 **hist.png**: Graphing the total pixel distance between each marker, per frame:
 
-- png
+![hist](./img/dlcbasic/hist.png)
 
 **plot.png**: Graphing the X & Y of each marker over time:
 
-- png
+![plot](./img/dlcbasic/plot.png)
 
 **plot-likelihood.png**: Certainty of each marker over time:
 
-- png
+![plot-likelihood](./img/dlcbasic/plot-likelihood.png)
 
 **trajectory.png**: Map of every single marker placed in the entire video. Probably the most useful graph.
 
-- png
+![trajectory](./img/dlcbasic/trajectory.png)
 
 ## If you made it this far
 
