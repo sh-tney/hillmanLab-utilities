@@ -1,9 +1,3 @@
----
-title: Training your own DeepSqueak network
-layout: template
-filename: squeaktrain.md
----
-
 # Training your own DeepSqueak network
 **links to dsqueak stuff**
 

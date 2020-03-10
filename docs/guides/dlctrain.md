@@ -1,9 +1,3 @@
----
-title: Training your own DeepLabCut network
-layout: template
-filename: dlctrain.md
---- 
-
 # Training your own DeepLabCut network
 
 **links to dlc page**

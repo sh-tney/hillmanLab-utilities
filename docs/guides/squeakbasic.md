@@ -1,9 +1,3 @@
----
-title: Analyzing Audio with DeepSqueak
-layout: template
-filename: squeakbasic.md
----
-
 # Analyzing Audio with DeepSqueak
 
 **links to deepsqueak page**
