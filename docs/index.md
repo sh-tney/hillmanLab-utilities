@@ -9,17 +9,10 @@ permalink: /
 # Weolasd
 
 
-asdhjnakjsdhakksd]
-a's;d
-a
-'sd
-a
-sd
-asd
-asd
-a
-sd
-as
- -
- - 2
- - 3 al;sp
+<ul>
+  {% for post in site.posts %}
+    <li>
+      <a href="{{ post.url }}">{{ post.title }}</a>
+    </li>
+  {% endfor %}
+</ul>
