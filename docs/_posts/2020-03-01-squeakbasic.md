@@ -2,7 +2,6 @@
 layout: post
 title:  "Analyzing Audio with DeepSqueak"
 date:   2020-03-01 01:32:32 +1300
-categories: jekyll update
 ---
 # Analyzing Audio with DeepSqueak
 

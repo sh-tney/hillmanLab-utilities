@@ -2,7 +2,6 @@
 layout: post
 title:  "Training your own DeepSqueak network"
 date:   2020-03-01 01:32:32 +1300
-categories: jekyll update
 ---
 # Training your own DeepSqueak network
 **links to dsqueak stuff**
