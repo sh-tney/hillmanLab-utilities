@@ -4,6 +4,7 @@
 
 title: Shid
 permalink: /
+layout: home.html
 ---
 
 # Weolasd
