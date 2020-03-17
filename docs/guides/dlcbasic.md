@@ -1,8 +1,9 @@
 ---
-layout: default.html
-title:  "Analyzing Videos with DeepLabCut"
-date:   2020-03-01 01:32:32 +1300
+title: Analyzing Videos with DeepLabCut
+layout: template
+filename: dlcbasic.md
 ---
+
 # Analyzing Videos with DeepLabCut
 
 ### Download DeepLabCut (DLC), and read their documentation here: https://github.com/AlexEMG/DeepLabCut

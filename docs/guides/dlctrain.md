@@ -1,9 +1,9 @@
 ---
-layout: post
-title:  "Training your own DeepLabCut network"
-date:   2020-03-01 01:32:32
-categories: jekyll update
----
+title: Training your own DeepLabCut network
+layout: template
+filename: dlctrain.md
+--- 
+
 # Training your own DeepLabCut network
 
 **links to dlc page**

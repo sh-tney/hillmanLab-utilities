@@ -1,18 +1,9 @@
 ---
-# Feel free to add content and custom Front Matter to this file.
-# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
-
-title: Shid
-permalink: /
+title: PAGE TITLE HERE
+layout: template
+filename: index.md
 ---
 
-# Weolasd
+# Hello
 
-
-<ul>
-  {% for post in site.posts %}
-    <li>
-      <a href="/hillmanLab-utilities{{ post.url }}">{{ post.title }}</a>
-    </li>
-  {% endfor %}
-</ul>
+[link](./guides/dlcbasic.md)

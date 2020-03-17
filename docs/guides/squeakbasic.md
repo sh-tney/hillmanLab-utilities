@@ -1,8 +1,9 @@
 ---
-layout: post
-title:  "Analyzing Audio with DeepSqueak"
-date:   2020-03-01 01:32:32 +1300
+title: Analyzing Audio with DeepSqueak
+layout: template
+filename: squeakbasic.md
 ---
+
 # Analyzing Audio with DeepSqueak
 
 **links to deepsqueak page**
