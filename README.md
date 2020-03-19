@@ -1,18 +1,20 @@
-Pages link: https://sh-tney.github.io/hillmanLab-utilities/
+# Hillman Lab Utilities & Guides
 
-[link](./docs/dlcbasic.md)
+This repository contains a set of guides and small utilities created for the purposes of the Hillman Lab at the University of Otago, for a project oriented around studying the correlates of rat behaviour and vocalizations. The material in this repository serves a dual purpose; both to serve as a guide for other members of the lab & community to use in their own projects, and also to document the processes used in the Hillman Lab project.
 
-# utilities
-Some useful code snips I've made while working in the lab, working with some rat neural data
+Guides for [DeepSqueak](https://github.com/DrCoffey/DeepSqueak) (Updated last for December 2019 Version):
+- [Analyzing audio with an existing DeeepSqueak network](./guides/squeakbasic.md)
+- [Training your own custom DeepSqueak network](./guides/squeaktrain.md)
 
-## proximityFlag
-Goes through any provided array of n coordinates, and uses internal variables to detect the distance between each array coordinate and the location variable; Marking the frame. Returns a size n array, containing both a raw distance & either a 0 or 1, indicating being within proximity on a 1.
- - Future update to move internal variables to be full parameters.
+Guides for [DeepLabCut](https://github.com/AlexEMG/DeepLabCut) (Updated last for December 2019 Version)
+- [Analyzing videos with an existing DLC network](./guides/dlcbasic.md)
+- [Training your own custom DLC network](./guides/dlctrain.md)
 
-## fileFisher (1.2)
-Batch Utility for searching complex directory structures, and pulling files matching name criteria into a single organised location.
- - Updated to have multiple options for renaming format.
- 
-## trainComparison
-DeepLabCut (https://github.com/AlexEMG/DeepLabCut) has the ability to create multiple different shuffles in order to compare different augmentation and networking methods on the same training set; However one has to train each of them one-by-one; This script instead allows one to queue up multiple shuffles for back-to-back training; Providing timestamps inbetween for benchmarking purpose. Also uses colour!.
- - Future update to have config path as an argument, and expand queueable functions beyond just training.
+Additional Useful Links:
+- [Example scripts for this project](./utilities)
+- [DeepSqueak's own Documentaation](https://github.com/DrCoffey/DeepSqueak/wiki)
+- [Installing DeepLabCut](https://github.com/AlexEMG/DeepLabCut/blob/master/docs/installation.md)
+- [DeepLabCut's own Documentation](https://github.com/AlexEMG/DeepLabCut/blob/master/docs/UseOverviewGuide.md)
+- [Additional community created scripts for DeepLabCut](https://github.com/DeepLabCut/DLCutils)
+
+I'm more than happy to hear any questions, clarifications, error fixes, bugs, etc. either on Github, or I'm always available at joshwhitney789@gmail.com. I'm not a part of the DeepLabCut or DeepSqueak teams; the guides placed here are for additional support of the community to cover their software in a way that aims to be more meticulous as a step-by-step, and tailored toward those who are just getting started with network based analysis, or maybe just less computer-savvy in general.
