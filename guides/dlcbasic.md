@@ -1,4 +1,4 @@
-# Analyzing Videos with DeepLabCut
+# Analyzing videos with an existing DLC network
 
 This is a short guide intended to walk someone through the process of using a [DeepLabCut](https://github.com/AlexEMG/DeepLabCut) network (which has already been prepared) to analyze new video files. To see how to train your own custom network, see [here](./dlctrain.md). For the purposes of this guide, I'll be referring to the network stored in ```S:\Kristin Hillman\LAB\Lab members\Josh\deeplabcut```, and the sample videos stored in ```S:\Kristin Hillman\LAB\Lab members\Josh\sourceData\pilotMPG```.
 

@@ -1,4 +1,4 @@
-# Training your own DeepLabCut network
+# Training your own custom DLC network
 
 This is a short guide intended to walk someone through the process of training a new DeepLabCut network to analyze video files. This guide also has the dual purpose of documenting how I trained my own network for use in the Hillman Lab at the University of Otago. For the purposes of this guide, I'll be referring to the network stored in ```S:\Kristin Hillman\LAB\Lab members\Josh\deeplabcut```, and the sample videos stored in ```S:\Kristin Hillman\LAB\Lab members\Josh\sourceData\pilotMPG```. 
 
