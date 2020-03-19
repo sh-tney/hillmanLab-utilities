@@ -1,4 +1,4 @@
-# Analyzing audio with an existing DeeepSqueak network
+# Analyzing audio with an existing DeepSqueak network
 
 This is a short guide intended to walk someone through the process of using a DeepSqueak network (which has already been prepared) to analyze new sound clips. To see how to train your own custom network, go [here](./squeaktrain.md).
 

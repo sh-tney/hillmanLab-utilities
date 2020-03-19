@@ -217,41 +217,80 @@ So collecting up our table, and maybe reviewing some of the visual data, we shou
 - **Include Skeleton?**: No
 - **Number of Trailpoints**: 1
 
-![img30](./img/dlctrain/img30.png)
-
 This'll take a minute, we're actually generating a marked video! We're only doing one though, and it's one we've already sampled from. This is because the 20 frames per video, are quite likely to have a few gaps in how generalizable they are. When the video finishes building, you'll be able to find it in the same folder as your video source:
 
-![img31](./img/dlctrain/img31.png)
+![img30](./img/dlctrain/img30.png)
 
 We want to open up the new video here, and frankly just watch it. You'll undoubtedly come into contact with a few bad looking frames here and there - awkward jumping, double-marking, etc. We want to take note of these, if you have a frame counter method of any kind, take down the frame number. 
- - If you don't have a frame counter in any of your video players, this can be estimated instead via converting the timestamp to seconds ((Minutes: * 6)) + Seconds), and then multiplying by 25 (The FPS of your camera used to record, mine with 25 FPS). In any way, as long you can sdfghjkasahsufhaisduhaisudhaisudhai
+ - If you don't have a frame counter in any of your video players, this can be estimated instead via converting the timestamp to seconds ((Minutes: * 6)) + Seconds), and then multiplying by 25 (The FPS of your camera used to record, mine with 25 FPS). In any way, as long you can get a rough idea of around the frame that has an error on it; we can fine tune later. 
  
- Back to extract frames asdhgajshdjahsbdjahsbdjahsbdjahbds - manual & update slider width
+Now we're going back to the DeepLabCut window, to the ```Extract Frames``` tab. This time we're going to be using the "manual" mode, because we're going to be manually selecting those frames that have errors on them, and adding them to the training sample; this is how we're going to perscriptively make our network better, by training it specifically on examples that it was previously getting wrong. We're going too use these settings on the ```Extract Frames``` tab:
+
+- **Select config files**: This should just be the config file in our project directory.
+- **Choose extraction method**: Manual
+- **Need user Feedback?**: Yes (when we need to select in the terminaal, we're only giving "yes" to the video we marked error frames on)
+- **Use OpenCV?**: Yes
+- **Select Algorithm**: This will be greyed out when we select manual.
+- **Specify Cluster Step**: 1
+- **Specify Slider Width**: This impacts the size of the slider in our manual selection window. Something between 60 & 80 should work, but you'll probably have to adjust the window size anyway. Note that this might be greyed out when selecting manual, if so, go back and select automatic, change this value, and then change back to manual (it still has an effect even if greyed out).
+
+Then we hit ```OK```, and we'll see the manual selection window:
  
- **img31** - extract frames manual opening window
- **img32** - crop frames?
- **img33** - Select frame 10000, 20l, 30k
- **img34** - new list of frames
- **img35** - label frames with new frame
- **img36** - label frames with new labels - explain that in real thing we went up to 
+![img31](./img/dlctrain/img31.png) 
+
+- extract frames manual opening window
+
+![img32](./img/dlctrain/img32.png)
+
+- crop frames?
+
+![img33](./img/dlctrain/img33.png)
+
+ - Select frame 10000, 20l, 30k
+
+![img34](./img/dlctrain/img34.png)
  
- **img37** - Training Dataset tab for shuffle 7
- **img38** - Collected Data in dlc/training-datasets/iteration-0/DataSet spreadsheet updated
- **img39** - Train network for "final" network
- **img40** - Evaluate 7 tab
- **img41** - shuffles updated - amazing woo
+ - new list of frames
+
+![img35](./img/dlctrain/img35.png)
+ 
+ - label frames with new frame
+
+![img36](./img/dlctrain/img36.png)
+ 
+ - label frames with new labels - explain that in real thing we went up to 
+ 
+![img37](./img/dlctrain/img37.png)
+ 
+ - Training Dataset tab for shuffle 7
+
+![img38](./img/dlctrain/img38.png)
+ 
+ - Collected Data in dlc/training-datasets/iteration-0/DataSet spreadsheet updated
+
+![img39](./img/dlctrain/img39.png)
+ 
+  Train network for "final" network
+
+![img40](./img/dlctrain/img40.png)
+ 
+ - Evaluate 7 tab
+
+![img41](./img/dlctrain/img41.png)
+ 
+ - shuffles updated - amazing woo
  
  --- extract ourlier frames doesn't work!!!!!!!!
 
 Now that I have this in mind, I can go back and set up a fresh network which I'll use as the "real" version (with a much larger set of iterations), to briefly recap steps:
-- ```Create training dataset```
+```Create training dataset```
 - - **Network**: resnet_152
 - - **Augmentation**: imgaug
 - - **Specific Shuffle Index**: 7 (after 6, our last network)
 - - **Trainingset**: 0
 - - **Compare Models**: No (we already know the one we want)
 - - ```OK```
-- ```Train Network```
+```Train Network```
 - - **Shuffle**: 7
 - - **Trainingset Index**: 0
 - - **Edit pose_cfg.yaml**: No
