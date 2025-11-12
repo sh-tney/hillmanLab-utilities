@@ -23,4 +23,4 @@ Additional Useful Links:
 - [Software Carpentry's Plotting & Programming in Python](http://swcarpentry.github.io/python-novice-gapminder/)
 
 
-I'm more than happy to hear any questions, clarifications, error fixes, bugs, etc. either on Github, or I'm always available at joshwhitney789@gmail.com. I'm not a part of the DeepLabCut or DeepSqueak teams; the guides placed here are for additional support of the community to cover their software in a way that aims to be more meticulous as a step-by-step, and tailored toward those who are just getting started with network based analysis, or maybe just less computer-savvy in general.
+I'm more than happy to hear any questions, clarifications, error fixes, bugs, etc. either on Github, or I'm always available at sh.tney@gmail.com I'm not a part of the DeepLabCut or DeepSqueak teams; the guides placed here are for additional support of the community to cover their software in a way that aims to be more meticulous as a step-by-step, and tailored toward those who are just getting started with network based analysis, or maybe just less computer-savvy in general.
